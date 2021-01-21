@@ -1,0 +1,13 @@
+#theGrid {
+    padding: 10px;
+}
+
+table {
+    background-color: lightgray;
+}
+
+td {
+    border: 1px solid black;
+    width: 10px;
+    height: 10px;
+}
