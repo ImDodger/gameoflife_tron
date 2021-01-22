@@ -1,3 +1,9 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #world {
     padding-bottom: 10px;
 }
@@ -18,4 +24,8 @@ td.dead {
 
 td.alive {
     background-color: blue;
+}
+
+td.wall {
+    background-color: black;
 }

@@ -1,8 +1,14 @@
-const rows = 40;
-const cols = 40;
+const rows = 60;
+const cols = 60;
 
 let currGen = [rows];
 let nextGen = [rows];
+
+let started = false;
+let timer;
+let evolutionSpeed = 50;
+
+let changeToWalls = false;
 
 function createGenArrays() {
     for (let i = 0; i < rows; i++) {
@@ -21,17 +27,18 @@ function initGenArrays() {
 }
 
 function createWorld() {
-    let world = document.querySelector('#world');
+    let world = document.querySelector("#theGrid");
 
-    let tbl = document.createElement('table');
-    tbl.setAttribute('id', 'worldgrid');
+    let tbl = document.createElement("table");
+    tbl.setAttribute("id", "worldgrid");
     for (let i = 0; i < rows; i++) {
-        let tr = document.createElement('tr');
+        let tr = document.createElement("tr");
         for (let j = 0; j < cols; j++) {
-            let cell = document.createElement('td');
-            cell.setAttribute('id', i + '_' + j);
-            cell.setAttribute('class', 'dead');
-            cell.addEventListener('click', cellClick);
+            let cell = document.createElement("td");
+            cell.setAttribute("id", i + "_" + j);
+            cell.setAttribute("class", "wall");
+            cell.setAttribute("class", "dead");
+            cell.addEventListener("click", cellClick);
             tr.appendChild(cell);
         }
         tbl.appendChild(tr);
@@ -39,16 +46,29 @@ function createWorld() {
     world.appendChild(tbl);
 }
 
+function createWalls() {
+    let changeWalls = document.querySelector("#btnwalls");
+
+    if (!changeToWalls) {
+        changeToWalls = true;
+        changeWalls.value = "Create Programs";
+    } else {
+        changeToWalls = false;
+        changeWalls.value = "Create Walls";
+    }
+}
+
 function cellClick() {
+
     let loc = this.id.split("_");
     let row = Number(loc[0]);
     let col = Number(loc[1]);
 
-    if (this.className === 'alive') {
-        this.setAttribute('class', 'dead');
+    if (this.className === "alive") {
+        this.setAttribute("class", "dead");
         currGen[row][col] = 0;
     } else {
-        this.setAttribute('class', 'alive');
+        this.setAttribute("class", "alive");
         currGen[row][col] = 1;
     }
 }
@@ -141,7 +161,6 @@ function getNeighborCount(row, col) {
             count++;
     }
 
-
     return count;
 }
 
@@ -165,12 +184,40 @@ function updateWorld() {
         for (col in currGen[row]) {
             cell = document.getElementById(row + '_' + col);
             if (currGen[row][col] == 0) {
-                cell.setAttribute('class', 'dead');
+                cell.setAttribute("class", "dead");
             } else {
-                cell.setAttribute('class', 'alive');
+                cell.setAttribute("class", "alive");
             }
         }
     }
+}
+
+function evolve() {
+    createNextGen();
+    updateCurrGen();
+    updateWorld();
+
+    if (started) {
+        timer = setTimeout(evolve, evolutionSpeed);
+    }
+}
+
+function startStop() {
+    let startstop = document.querySelector("#btnstartstop");
+
+    if (!started) {
+        started = true;
+        startstop.value = "Stop Simulation";
+        evolve();
+    } else {
+        started = false;
+        startstop.value = "Start The Grid"
+        clearTimeout(timer);
+    }
+}
+
+function resetWorld() {
+    location.reload();
 }
 
 window.onload = () => {
