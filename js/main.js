@@ -6,7 +6,7 @@ let nextGen = [rows];
 
 let started = false;
 let timer;
-let evolutionSpeed = 50;
+let evolutionSpeed = 300;
 
 let changeToWalls = false;
 
